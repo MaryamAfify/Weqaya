@@ -1,0 +1,67 @@
+import 'package:flutter/material.dart';
+
+import '../../doctor/doctorlist/completedDoctors.dart';
+import '../../doctor/doctorlist/pendingDoctors.dart';
+import '../../styles/colors.dart';
+import 'orders_lab.dart';
+import 'orders_lab_history.dart';
+
+class navigation_in_doctor_inpatient extends StatefulWidget {
+  const navigation_in_doctor_inpatient({Key? key}) : super(key: key);
+
+  @override
+  State<navigation_in_doctor_inpatient> createState() =>
+      _navigation_in_doctor_inpatientState();
+}
+
+class _navigation_in_doctor_inpatientState
+    extends State<navigation_in_doctor_inpatient>  with TickerProviderStateMixin{
+  late TabController _tabController;
+
+  final List<Widget> _tabs = [
+    pendingDoctors(),
+    completedDoctors(),
+  ];
+
+  final List<String> _tabTitles = [
+    'Orders',
+    'History',
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: _tabs.length, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Doctor"),
+        centerTitle: true,
+        backgroundColor: defaultColor,
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(20.0), // Set the preferred height of the TabBar
+          child: TabBar(
+            controller: _tabController,
+            tabs: _tabTitles.map((title) => Tab(text: title)).toList(),
+            indicatorSize: TabBarIndicatorSize.label,
+            indicatorWeight: 2.0,
+            labelStyle: TextStyle(fontSize: 12), // Set a smaller font size for the tab labels
+          ),
+        ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: _tabs,
+      ),
+    );
+  }
+}
